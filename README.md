@@ -1,6 +1,8 @@
 # WeatherFriend
 Weatherfriend seeks to revolutionize the world of weather by providing users with a friendly experience catered to their busy lifestyles
 
+Weather information gathered utilizing Weather Underground API
+
 Here are some goals for Weather Friend, in order of importance:
 
 1) I want the application to select my current location by default in order to avoid always having to enter my current location.
