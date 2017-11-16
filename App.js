@@ -11,6 +11,7 @@ export default class App extends React.Component {
       location: ''
     };
     this.get_conditions = this.get_conditions.bind(this);
+    this.set_location = this.set_location.bind(this);
   }
 
   get_conditions() {
@@ -28,7 +29,7 @@ export default class App extends React.Component {
       });
   }
 
-  componentWillMount() {
+  set_location() {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState(previousState => {
           return { location: position };
@@ -36,7 +37,12 @@ export default class App extends React.Component {
     });
   }
 
+  componentWillMount() {
+    this.set_location();
+  }
+
   render() {
+    console.log(this.state.location);
     let condition_list = (<Text>
       <Text style={styles.list_key}>{`City: `}</Text>
       <Text>{this.state.conditions ? this.state.conditions.location.city : ''}</Text>
@@ -60,6 +66,10 @@ export default class App extends React.Component {
           <Button
             onPress={this.get_conditions}
             title="Current Conditions"
+          />
+          <Button
+            onPress={this.set_location}
+            title="Update Location"
           />
         </View>
       </View>
