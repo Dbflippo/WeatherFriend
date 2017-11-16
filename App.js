@@ -12,6 +12,7 @@ export default class App extends React.Component {
     };
     this.get_conditions = this.get_conditions.bind(this);
     this.set_location = this.set_location.bind(this);
+    this.get_advice = this.get_advice.bind(this);
   }
 
   get_conditions() {
@@ -27,6 +28,31 @@ export default class App extends React.Component {
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  get_advice() {
+    if (this.state.conditions) {
+      let temperature = this.state.conditions.current_observation.temp_f;
+      if (temperature < 36) {
+        return 'It\'s the start of a new ice age. Bundle up.';
+      }
+      if (temperature >= 36 && temperature < 58) {
+        return 'Chilly today. Add some layers like an onion.';
+      }
+      if (temperature >= 58 && temperature < 67) {
+        return 'A little cool. Maybe some long sleeves?';
+      }
+      if (temperature >= 67 && temperature < 77) {
+        return 'Pretty nice for once. Light comfy clothes will do fine.';
+      }
+      if (temperature >= 77 && temperature < 92) {
+        return 'Getting warm. Short sleeves and shorts.';
+      }
+      if (temperature > 93) {
+        return 'It\'s a sweat fest. Good luck.';
+      }
+    }
+    return '';
   }
 
   set_location() {
@@ -56,19 +82,17 @@ export default class App extends React.Component {
       <Text style={styles.list_key}>{`\nFeels Like: `}</Text>
       <Text>{this.state.conditions ? this.state.conditions.current_observation.feelslike_string : ''}</Text>
     </Text>);
+    let advice = this.get_advice();
     let displayed_content = this.state.conditions ? condition_list : 'No conditions requested';
     return (
       <View style={styles.container}>
         <Text style={styles.title}>WeatherFriend</Text>
+        <Text style={styles.advice}>{advice}</Text>
         <Text>{displayed_content}</Text>
         <View style={styles.buttonContainer}>
           <Button
             onPress={this.get_conditions}
             title="Current Conditions"
-          />
-          <Button
-            onPress={this.set_location}
-            title="Update Location"
           />
         </View>
       </View>
@@ -85,6 +109,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     alignItems: 'center'
+  },
+  advice: {
+    fontWeight: 'bold',
+    fontSize: 50,
+    textAlign: 'center'
   },
   container: {
     flex: 1,
