@@ -42,7 +42,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log(this.state.location);
     let condition_list = (<Text>
       <Text style={styles.list_key}>{`City: `}</Text>
       <Text>{this.state.conditions ? this.state.conditions.location.city : ''}</Text>
