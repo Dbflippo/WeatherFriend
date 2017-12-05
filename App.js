@@ -33,24 +33,48 @@ export default class App extends React.Component {
   get_advice() {
     if (this.state.conditions) {
       let temperature = this.state.conditions.current_observation.temp_f;
-      if (temperature < 36) {
-        return 'It\'s the start of a new ice age. Bundle up.';
+      let weather = this.state.conditions.current_observation.weather
+      let suggestion = ""
+      if (temperature < 32) {
+        suggestion += 'It\'s the start of a new ice age. Bundle up.';
       }
-      if (temperature >= 36 && temperature < 58) {
-        return 'Chilly today. Add some layers like an onion.';
+      if (temperature >= 32 && temperature < 55) {
+          suggestion += 'Chilly today. Add some layers like an onion.';
       }
-      if (temperature >= 58 && temperature < 67) {
-        return 'A little cool. Maybe some long sleeves?';
+      if (temperature >= 55 && temperature < 65) {
+          suggestion += 'A little cool. Maybe some long sleeves?';
       }
-      if (temperature >= 67 && temperature < 77) {
-        return 'Pretty nice for once. Light comfy clothes will do fine.';
+      if (temperature >= 65 && temperature < 77) {
+          suggestion += 'Pretty nice for once. Light comfy clothes will do fine.';
       }
-      if (temperature >= 77 && temperature < 92) {
-        return 'Getting warm. Short sleeves and shorts.';
+      if (temperature >= 77 && temperature < 85) {
+          suggestion += 'Getting warm. Short sleeves and shorts.';
       }
-      if (temperature > 93) {
-        return 'It\'s a sweat fest. Good luck.';
+      if (temperature > 85) {
+          suggestion += 'It\'s a sweat fest. Good luck.';
       }
+      if (weather.includes("Thunderstorm") || weather.includes("Rain")) {
+          suggestion += ' Also, don\'t forget an umbrella!'
+      }
+      if ((weather.includes("Partly Cloudy") || weather.includes("Overcast")) && (suggestion.includes("warm") || suggestion.includes("sweat"))) {
+          suggestion += ' Clouds should provide some shade'
+      }
+      if ((weather.includes("Partly Cloudy") || weather.includes("Overcast")) && (suggestion.includes("cool") || suggestion.includes("chilly") || suggestion.includes("ice"))) {
+          suggestion += ' Clouds will make it even colder!'
+      }
+      if (weather.includes("Snow")) {
+          suggestion += ' It\'s going to snow!!'
+      }
+      if (weather.includes("Clear") && (suggestion.includes("warm") || suggestion.includes("sweat"))) {
+          suggestion += ' Clear skies will make it even warmer'
+      }
+      if (weather.includes("Clear") && (suggestion.includes("cool") || suggestion.includes("chilly") || suggestion.includes("ice"))) {
+          suggestion += ' However, Clear skies will warm it up some'
+      }
+      if (weather.includes("Hail")) {
+          suggestion += ' Hail today, watch for falling ice!'
+      }
+
     }
     return '';
   }
