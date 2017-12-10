@@ -10,45 +10,55 @@ export default class App extends React.Component {
       conditions: '',
       location: '',
       astronomy: '',
-      time: ''
+      time: '',
+      text: ''
     };
     this.get_conditions = this.get_conditions.bind(this);
     this.get_astronomy = this.get_astronomy.bind(this);
     this.set_location = this.set_location.bind(this);
     this.get_advice = this.get_advice.bind(this);
-    this.get_time = this.get_time.bind(this);
+    //this.get_time = this.get_time.bind(this);
   }
 
-  get_conditions() {
-    let lat = this.state.location ? `${this.state.location.coords.latitude},` : 'TN/';
-    let long = this.state.location ? this.state.location.coords.longitude : 'Nashville';
-    return fetch(`http://api.wunderground.com/api/d4b1790f02e5b31f/geolookup/conditions/q/${lat}${long}.json`)
+  get_conditions(position, astronomy) {
+  	let lat = position.coords.latitude;
+  	let long = position.coords.longitude;
+    //let lat = this.state.location ? `${this.state.location.coords.latitude},` : 'TN/';
+    //let long = this.state.location ? this.state.location.coords.longitude : 'Nashville';
+    return fetch(`http://api.wunderground.com/api/d4b1790f02e5b31f/geolookup/conditions/q/${lat},${long}.json`)
       .then((response) => response.json())
       .then((responseJson) => {
-        this.setState(previousState => {
-          return { conditions: responseJson };
-        });
+        this.setState({ location: position, 
+        	astronomy: astronomy,
+        	conditions: responseJson, 
+        	time: responseJson.current_observation.observation_time_rfc822.substr(17, 8).replace(":", "") });
       })
       .catch((error) => {
         console.error(error);
       });
   }
 
-  get_astronomy() {
-    let lat = this.state.location ? `${this.state.location.coords.latitude},` : 'TN/';
-    let long = this.state.location ? this.state.location.coords.longitude : 'Nashville';
-    return fetch(`http://api.wunderground.com/api/d4b1790f02e5b31f/geolookup/astronomy/q/${lat}${long}.json`)
+  get_astronomy(position) {
+  	let lat = position.coords.latitude;
+  	let long = position.coords.longitude;
+    //let lat = this.state.location ? `${this.state.location.coords.latitude},` : 'TN/';
+    //let long = this.state.location ? this.state.location.coords.longitude : 'Nashville';
+    return fetch(`http://api.wunderground.com/api/d4b1790f02e5b31f/geolookup/astronomy/q/${lat},${long}.json`)
       .then((response) => response.json())
       .then((responseJson) => {
-        this.setState(previousState => {
-          return { astronomy: responseJson };
+      	/*
+        this.setState({ astronomy: responseJson }, () => {
+        	this.get_conditions();
         });
+        */
+        this.get_conditions(position, responseJson);
       })
       .catch((error) => {
         console.error(error);
       });
   }
 
+  /*
   get_time() {
     let lat = this.state.location ? `${this.state.location.coords.latitude},` : 'TN/';
     let long = this.state.location ? this.state.location.coords.longitude : 'Nashville';
@@ -63,6 +73,7 @@ export default class App extends React.Component {
         console.error(error);
       });
   }
+  */
 
   get_advice() {
     if (this.state.conditions) {
@@ -115,11 +126,13 @@ export default class App extends React.Component {
 
   set_location() {
     navigator.geolocation.getCurrentPosition((position) => {
-      this.setState(previousState => {
-          return { location: position };
-        });
-      this.get_astronomy();
+    	this.get_astronomy(position);
+    	/*
+      this.setState({ location: position }, () => {
+      	this.get_astronomy(position);
+      });
       // this.get_conditions()
+      */
     });
   }
 
@@ -175,7 +188,7 @@ export default class App extends React.Component {
         <Text style={white_text ? styles.white_text : styles.text}>{displayed_content}</Text>
         <View style={styles.buttonContainer}>
           <Button
-            onPress={this.get_conditions}
+            onPress={this.set_location}
             title="Current Conditions"
           />
         </View>
