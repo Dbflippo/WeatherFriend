@@ -32,7 +32,7 @@ export default class DayForecast extends React.Component {
     });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.get_forecast_day(this.props.location);
   }
 

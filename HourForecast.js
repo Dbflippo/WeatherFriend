@@ -19,7 +19,7 @@ export default class HourForecast extends React.Component {
     this.process_forecast = this.process_forecast.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.get_forecast_hour(this.props.location);
   }
 
