@@ -1,8 +1,13 @@
 import React from 'react';
 import DayForecast from './DayForecast';
 import styles from './Styles';
-import { Alert, Animated, AppRegistry, Button, NavigatorIOS, ScrollView, StyleSheet, Text, View, Image } from 'react-native';
+import { Alert, Animated, AppRegistry, Button, NavigatorIOS, ScrollView, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 
+/*
+  The Now component holds all advice decision logic. It acts as a main menu to other
+  components such as 10 day forecast and hourly forecast. Also has a switch for
+  temperature scales that passes the state down to other components via props.
+*/
 export default class Now extends React.Component {
   constructor(props) {
     super(props);
@@ -12,7 +17,7 @@ export default class Now extends React.Component {
       location: this.props.location,
       astronomy: this.props.astronomy,
       time: this.props.time,
-      text: this.props.text,
+      text: '',
       celsius: false
     };
     this._onForward = this._onForward.bind(this);
@@ -25,6 +30,9 @@ export default class Now extends React.Component {
     this.get_other_scale = this.get_other_scale.bind(this);
   }
 
+  /*
+    Handler for 10 day forecast button. Moves to the component screen.
+  */
   _onForward() {
     this.props.navigator.push({
       component: DayForecast,
@@ -33,6 +41,11 @@ export default class Now extends React.Component {
     });
   }
 
+  /*
+    Retrieves updated general weather conditions. The location and astronomy
+    results are passed to this function as this is the end of the chain which
+    updates the component state all at once.
+  */
   update_conditions(position, astronomy) {
   	let lat = position.coords.latitude;
   	let long = position.coords.longitude;
@@ -54,6 +67,11 @@ export default class Now extends React.Component {
       });
   }
 
+  /*
+    Part of the update state call chain that takes the position value to get
+    the appropriate API information. Calls update_conditions as part of the
+    chain
+  */
   update_astronomy(position) {
   	let lat = position.coords.latitude;
   	let long = position.coords.longitude;
@@ -67,6 +85,10 @@ export default class Now extends React.Component {
       });
   }
 
+  /*
+    Retrieves advice based on the current state. The plan was to adjust boundary
+    values depending on user feedback (they though it was too hot or cold)
+  */
   get_advice() {
     if (this.state.conditions) {
       let temperature = this.state.conditions.current_observation.temp_f;
@@ -116,12 +138,19 @@ export default class Now extends React.Component {
     return '';
   }
 
+  /*
+    Initial start of the asynchronous call chain.
+  */
   update_location() {
     navigator.geolocation.getCurrentPosition((position) => {
     	this.update_astronomy(position);
     });
   }
 
+  /*
+    Gets appropriate background URL based on current state (time and 
+    weather conditions)
+  */
   get_background() {
     let weather = this.state.conditions ? this.state.conditions.current_observation.weather : '';
     let report_time = this.state.time ? parseInt(this.state.time) : '';
@@ -149,12 +178,19 @@ export default class Now extends React.Component {
     return [background_url, white_text];
   }
 
+  /*
+    Essentially a switch to change scale state.
+  */
   switch_scale() {
     this.setState((prevState, props) => {
       return {celsius: !prevState.celsius};
     });
   }
 
+  /*
+    Returns string value of opposite scale to update button
+    text.
+  */
   get_other_scale() {
     return this.state.celsius ? 'Fahrenheit' : 'Celsius';
   }

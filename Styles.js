@@ -1,5 +1,9 @@
 import { StyleSheet } from 'react-native';
 
+/*
+  For sake of modulization, all styles used through
+  the components are listed here and exported.
+*/
 let styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
@@ -86,6 +90,17 @@ let styles = StyleSheet.create({
   condition_hourly: {
     fontSize: 28,
     fontWeight: 'bold'
+  },
+  white_text_medium: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    padding: 10
+  },
+  text_medium: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    padding: 10
   }
 });
 

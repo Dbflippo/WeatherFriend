@@ -3,6 +3,11 @@ import styles from './Styles'
 import { AppRegistry, Button, FlatList, Text, Image, StatusBar, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Constants } from 'expo';
 
+/*
+  Gets 10 day hourly forecast information and processes the JSON to
+  render into a FlatList. Month and day information is passed into
+  this component to know which hourly information day to display. 
+*/
 export default class HourForecast extends React.Component {
   constructor(props) {
     super(props);
