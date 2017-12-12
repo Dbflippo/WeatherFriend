@@ -63,6 +63,9 @@ export default class HourForecast extends React.Component {
   	let forecast_object = null;
   	if (this.state.forecast_hour) {
   		forecast_object = this.process_forecast();
+      if (!this.state.forecast_hour) {
+        return (<View style={styles.container_center}><Text>No available hourlies!</Text></View>)
+      }
   	}
   	return (
       <View style={styles.container_list}>
